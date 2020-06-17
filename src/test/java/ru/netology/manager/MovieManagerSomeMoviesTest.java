@@ -1,13 +1,26 @@
 package ru.netology.manager;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import ru.netology.domain.MovieInfo;
+import ru.netology.repository.MovieRepository;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.mockito.Mockito.*;
+
+@ExtendWith(MockitoExtension.class)
 
 class MovieManagerSomeMoviesTest {
 
-    private MovieManager manager = new MovieManager();
+    @Mock
+    MovieRepository repository;
+
+    @InjectMocks
+    private MovieManager manager;
+
     private MovieInfo first = new MovieInfo(1, "Номер Один", "Комедия", "url1");
     private MovieInfo second = new MovieInfo(2, "Тролли", "Мультфильм", "url2");
     private MovieInfo third = new MovieInfo(3, "Человек-невидимка", "Ужасы", "url3");
@@ -41,22 +54,55 @@ class MovieManagerSomeMoviesTest {
 
         setUp(manager);
         MovieInfo thirteenth = new MovieInfo(13, "Убить Билла", "Боевик", "url13");
+
+        doNothing().when(repository).save(thirteenth);
+        MovieInfo[] returned = new MovieInfo[]{fourth, fifth, sixth, seventh, eighth, ninth, tenth, eleventh, twelfth, thirteenth};
+        doReturn(returned).when(repository).findAll();
+
         manager.add(thirteenth);
 
         MovieInfo[] actual = manager.getLastAdded();
         MovieInfo[] expected = new MovieInfo[]{thirteenth, twelfth, eleventh, tenth, ninth, eighth, seventh, sixth, fifth, fourth};
 
         assertArrayEquals(expected, actual);
+
+        verify(repository).save(thirteenth);
+        verify(repository).findAll();
+
+
     }
+
 
     @Test
     void getLast() {
-        MovieManager manager = new MovieManager(5);
+        MovieManager manager = new MovieManager(repository,5);
         setUp(manager);
+
+        MovieInfo[] returned = new MovieInfo[]{eighth, ninth, tenth, eleventh, twelfth};
+        doReturn(returned).when(repository).findAll();
 
         MovieInfo[] actual = manager.getLastAdded();
         MovieInfo[] expected = new MovieInfo[]{twelfth, eleventh, tenth, ninth, eighth};
 
         assertArrayEquals(expected, actual);
+
+        verify(repository).findAll();
+    }
+
+
+    @Test
+    void getLastIfAfficheLengthIsOverDefault() {
+        MovieManager manager = new MovieManager(repository, 15);
+        setUp(manager);
+
+        MovieInfo[] returned = new MovieInfo[]{first, second, third, fourth, fifth, sixth, seventh, eighth, ninth, tenth, eleventh, twelfth};
+        doReturn(returned).when(repository).findAll();
+
+        MovieInfo[] actual = manager.getLastAdded();
+        MovieInfo[] expected = new MovieInfo[]{twelfth, eleventh, tenth, ninth, eighth, seventh, sixth, fifth, fourth, third, second, first};
+
+        assertArrayEquals(expected, actual);
+
+        verify(repository).findAll();
     }
 }
