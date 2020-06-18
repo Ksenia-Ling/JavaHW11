@@ -40,7 +40,7 @@ class MovieManagerZeroMoviesTest {
     @Test
     void getLastAddedIfAfficheLengthBelowZero() {
 
-        MovieManager manager = new MovieManager(repository, 0);
+        MovieManager manager = new MovieManager(repository, -1);
 
         MovieInfo[] returned = new MovieInfo[]{};
         doReturn(returned).when(repository).findAll();

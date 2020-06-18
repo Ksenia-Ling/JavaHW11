@@ -24,6 +24,7 @@ public class MovieManager {
 
     public MovieInfo[] getLastAdded() {
         MovieInfo[] movies = repository.findAll();
+
         int movieCount = movies.length;
         if ((afficheDefaultLength < movies.length) && (afficheLength == 0)) {
             movieCount = afficheDefaultLength;

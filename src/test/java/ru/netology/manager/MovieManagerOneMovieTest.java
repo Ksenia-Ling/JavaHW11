@@ -23,9 +23,6 @@ class MovieManagerOneMovieTest {
 
     private MovieInfo first = new MovieInfo(1, "Номер Один", "Комедия", "url1");
 
-    public void setUp(MovieManager manager) {
-        manager.add(first);
-    }
 
     @Test
     void getLastAdded() {
@@ -33,7 +30,6 @@ class MovieManagerOneMovieTest {
         MovieInfo[] returned = new MovieInfo[]{first};
         doReturn(returned).when(repository).findAll();
 
-        setUp(manager);
         MovieInfo[] actual = manager.getLastAdded();
         MovieInfo[] expected = new MovieInfo[]{first};
 
@@ -49,8 +45,6 @@ class MovieManagerOneMovieTest {
 
         MovieInfo[] returned = new MovieInfo[]{first};
         doReturn(returned).when(repository).findAll();
-
-        setUp(manager);
 
         MovieInfo[] actual = manager.getLastAdded();
         MovieInfo[] expected = new MovieInfo[]{first};
@@ -69,8 +63,6 @@ class MovieManagerOneMovieTest {
 
         MovieInfo[] returned = new MovieInfo[]{first};
         doReturn(returned).when(repository).findAll();
-
-        setUp(manager);
 
         MovieInfo[] actual = manager.getLastAdded();
         MovieInfo[] expected = new MovieInfo[]{first};
