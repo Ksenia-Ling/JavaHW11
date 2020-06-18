@@ -2,33 +2,28 @@ package ru.netology.manager;
 
 import lombok.NoArgsConstructor;
 import ru.netology.domain.MovieInfo;
+import ru.netology.repository.MovieRepository;
 
 @NoArgsConstructor
 
 public class MovieManager {
 
-    private MovieInfo[] movies = new MovieInfo[0];
-
+    private MovieRepository repository;
     private final int afficheDefaultLength = 10;
     private int afficheLength;
 
-
-    public MovieManager(int afficheLength) {
+    public MovieManager(MovieRepository repository, int afficheLength) {
+        this.repository = repository;
         this.afficheLength = afficheLength;
     }
 
 
     public void add(MovieInfo movie) {
-        int length = movies.length + 1;
-        MovieInfo[] tmp = new MovieInfo[length];
-
-        System.arraycopy(movies, 0, tmp, 0, movies.length);
-        int lastIndex = tmp.length - 1;
-        tmp[lastIndex] = movie;
-        movies = tmp;
+        repository.save(movie);
     }
 
     public MovieInfo[] getLastAdded() {
+        MovieInfo[] movies = repository.findAll();
 
         int movieCount = movies.length;
         if ((afficheDefaultLength < movies.length) && (afficheLength == 0)) {
@@ -45,4 +40,3 @@ public class MovieManager {
         return result;
     }
 }
-
